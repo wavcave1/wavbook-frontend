@@ -1,30 +1,28 @@
-import { apiFetch } from "@/lib/api/client";
-import type {
-  DashboardMeResponse,
-  DashboardStudiosResponse,
-  LoginPayload,
-  RegisterPayload,
-} from "@/types/api";
+import { apiFetch } from '@/lib/api/client';
+import type { DashboardMeResponse, DashboardStudiosResponse } from '@/types/api';
 
 export const authApi = {
-  login: (payload: LoginPayload) =>
-    apiFetch("/api/auth/login", {
-      method: "POST",
-      body: payload,
+  login: () =>
+    apiFetch('/api/auth/login', {
+      method: 'POST',
     }),
 
-  register: (payload: RegisterPayload) =>
-    apiFetch("/api/auth/register", {
-      method: "POST",
+  register: (
+    payload: { inviteCode: string; studioName?: string },
+    token?: string,
+  ) =>
+    apiFetch('/api/auth/register', {
+      method: 'POST',
       body: payload,
+      token,
     }),
 
   logout: () =>
-    apiFetch("/api/auth/logout", {
-      method: "POST",
+    apiFetch('/api/auth/logout', {
+      method: 'POST',
     }),
 
-  getMe: () => apiFetch<DashboardMeResponse>("/api/auth/me"),
+  getMe: () => apiFetch<DashboardMeResponse>('/api/auth/me'),
 
-  getStudios: () => apiFetch<DashboardStudiosResponse>("/api/auth/studios"),
+  getStudios: () => apiFetch<DashboardStudiosResponse>('/api/auth/studios'),
 };

@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "WAVBOOK Mobile",
+    "slug": "wavbook-mobile",
+    "scheme": "wavbook",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.example.wavbookmobile"
+    },
+    "android": {
+      "package": "com.example.wavbookmobile"
+    },
+    "extra": {
+      "apiUrl": "${EXPO_PUBLIC_API_URL}",
+      "auth0Domain": "${EXPO_PUBLIC_AUTH0_DOMAIN}",
+      "auth0ClientId": "${EXPO_PUBLIC_AUTH0_CLIENT_ID}",
+      "auth0Audience": "${EXPO_PUBLIC_AUTH0_AUDIENCE}"
+    }
+  }
+}

@@ -1,150 +1,93 @@
-# WAV CAVE Frontend
+# WAVBOOK Monorepo
 
-React + TypeScript frontend scaffold for the studio booking SaaS and marketplace product.
+This repository now contains three coordinated applications:
 
-## Setup
+- the original Next.js web frontend in the repo root
+- a new Railway-ready Node.js backend in `/backend`
+- a new Expo React Native app in `/mobile`
 
-1. Copy `.env.example` to `.env.local`
-2. Set `NEXT_PUBLIC_API_BASE_URL` to the existing backend API origin
-3. Run `npm install`
-4. Run `npm run dev`
+The existing web UI remains in place and now targets the new backend through the existing API client layer.
 
-## Frontend folder structure
+## Repo structure
 
 ```text
-frontend/
-├─ src/
-│  ├─ app/
-│  │  ├─ (public)/
-│  │  ├─ (auth)/
-│  │  └─ app/
-│  ├─ components/
-│  │  ├─ booking/
-│  │  ├─ layouts/
-│  │  ├─ navigation/
-│  │  ├─ settings/
-│  │  ├─ studios/
-│  │  └─ ui/
-│  ├─ features/
-│  │  ├─ auth/
-│  │  └─ dashboard/
-│  ├─ hooks/
-│  ├─ lib/
-│  │  ├─ api/
-│  │  │  ├─ adapters/
-│  │  │  └─ endpoints/
-│  │  └─ mocks/
-│  └─ types/
-├─ package.json
+.
+├─ backend/                # Express + TypeScript + Prisma + PostgreSQL + Stripe + Auth0
+├─ mobile/                 # Expo React Native app
+├─ src/                    # Existing Next.js frontend
+├─ package.json            # Web app scripts plus backend/mobile helpers
 └─ README.md
 ```
 
-## Route structure
+## Web frontend
 
-```text
-/
-/studios
-/studios/[slug]
-/studios/[slug]/book
-/login
-/register
-/app
-/app/studio/[slug]/dashboard
-/app/studio/[slug]/bookings
-/app/studio/[slug]/calendar
-/app/studio/[slug]/blocks
-/app/studio/[slug]/settings/profile
-/app/studio/[slug]/settings/contact
-/app/studio/[slug]/settings/branding
-/app/studio/[slug]/settings/booking
-/app/studio/[slug]/settings/public-page
+### Run the existing web app
+
+1. Copy `.env.example` to `.env.local`.
+2. Set `NEXT_PUBLIC_API_BASE_URL` to the backend origin.
+3. Set the Auth0 public values for the web app.
+4. Run `npm install`.
+5. Run `npm run dev`.
+
+### Web env vars
+
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=YOUR_STRIPE_PUBLISHABLE_KEY
+NEXT_PUBLIC_AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+NEXT_PUBLIC_AUTH0_CLIENT_ID=YOUR_AUTH0_CLIENT_ID
+NEXT_PUBLIC_AUTH0_AUDIENCE=YOUR_AUTH0_API_AUDIENCE
+NEXT_PUBLIC_AUTH0_REDIRECT_URI=http://localhost:3000/callback
 ```
 
-## Shared component structure
+### What changed in the web app
 
-```text
-layouts/
-- AppLayout
-- PublicLayout
+- Public marketplace, studio detail, and booking flows still use the existing component structure.
+- Operator auth now redirects through Auth0 and stores the access token client-side.
+- Existing API endpoint wrappers continue to power the dashboard/settings pages, but now attach the bearer token for protected backend routes.
 
-navigation/
-- Navbar
-- Footer
-- DashboardSidebar
+## Backend
 
-studios/
-- StudioCard
-- StudioGrid
-- SearchBar
-- FilterPanel
+See [`backend/README.md`](backend/README.md) for full setup, Railway deployment, database migration, Auth0, and Stripe webhook instructions.
 
-booking/
-- BookingForm
-- BookingSummary
+### Quick start
 
-settings/
-- SettingsFormSection
-- SettingsTabs
-
-ui/
-- Button
-- SurfaceCard
-- StatCard
-- NoticeBanner
-- EmptyState
-- LoadingCard
+```bash
+cd backend
+cp .env.example .env
+npm install
+npm run prisma:generate
+npm run prisma:migrate
+npm run db:seed
+npm run dev
 ```
 
-## API client structure
+## Mobile app
 
-```text
-lib/api/
-├─ client.ts
-├─ endpoints/
-│  ├─ public-api.ts
-│  ├─ auth-api.ts
-│  └─ admin-api.ts
-└─ adapters/
-   ├─ booking-pricing.adapter.ts
-   ├─ dashboard-insights.adapter.ts
-   └─ studio-reviews.adapter.ts
+See [`mobile/README.md`](mobile/README.md) for focused mobile instructions.
+
+### Quick start
+
+```bash
+cd mobile
+cp .env.example .env
+npm install
+npm run start
 ```
 
-### Real endpoint usage
+### Mobile env vars
 
-- `public-api.ts`
-  - marketplace home
-  - studio search
-  - studio profile
-  - availability
-  - pricing
-  - payment intent creation
-- `auth-api.ts`
-  - login
-  - register
-  - logout
-  - current user
-  - accessible studios
-- `admin-api.ts`
-  - studio profile
-  - publication
-  - settings
-  - media
-  - bookings
-  - team
-  - blocks
+```bash
+EXPO_PUBLIC_API_URL=YOUR_BACKEND_URL
+EXPO_PUBLIC_AUTH0_DOMAIN=YOUR_AUTH0_DOMAIN
+EXPO_PUBLIC_AUTH0_CLIENT_ID=YOUR_AUTH0_CLIENT_ID
+EXPO_PUBLIC_AUTH0_AUDIENCE=YOUR_AUTH0_API_AUDIENCE
+```
 
-### Placeholder adapters
+## Root helper scripts
 
-- `studio-reviews.adapter.ts`
-  - backend currently returns `501` for reviews, so the UI shows an explicit placeholder
-- `booking-pricing.adapter.ts`
-  - deposit pricing is intentionally treated as placeholder data until a public quote endpoint exists
-- `dashboard-insights.adapter.ts`
-  - analytics-style insight card is isolated behind a mock adapter instead of inventing backend behavior
-
-## Notes
-
-- Public marketplace and operator pages share the same design system and tokens.
-- Public pages that previously depended on async page components now use shared client-side resource hooks, which keeps the UI in plain React components.
-- Run `npm run build` after installing dependencies to validate the current scaffold in your environment.
+```bash
+npm run dev            # web frontend
+npm run backend:dev    # backend
+npm run mobile:start   # mobile
+```

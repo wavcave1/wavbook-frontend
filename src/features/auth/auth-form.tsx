@@ -1,48 +1,46 @@
 "use client";
 
-import Link from "@/compat/next-link";
-import { useRouter } from "@/compat/next-navigation";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { NoticeBanner } from "@/components/ui/notice-banner";
-import { SurfaceCard } from "@/components/ui/surface-card";
-import { authApi } from "@/lib/api/endpoints/auth-api";
+import Link from '@/compat/next-link';
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { NoticeBanner } from '@/components/ui/notice-banner';
+import { SurfaceCard } from '@/components/ui/surface-card';
+import { setPendingInvite, startAuthFlow } from '@/lib/auth/auth-client';
 
 interface AuthFormProps {
-  mode: "login" | "register";
+  mode: 'login' | 'register';
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-  const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [inviteCode, setInviteCode] = useState("");
+  const [inviteCode, setInviteCode] = useState('');
+  const [studioName, setStudioName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const isRegister = mode === "register";
+  const isRegister = mode === 'register';
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleContinue = async () => {
     setLoading(true);
     setError(null);
 
     try {
       if (isRegister) {
-        await authApi.register({ email, password, inviteCode });
-      } else {
-        await authApi.login({ email, password });
-      }
+        if (!inviteCode.trim()) {
+          throw new Error('Invite code is required to provision operator access.');
+        }
 
-      router.push("/app");
-      router.refresh();
+        setPendingInvite({ inviteCode: inviteCode.trim(), studioName: studioName.trim() || undefined });
+        await startAuthFlow('signup');
+      } else {
+        setPendingInvite(null);
+        await startAuthFlow('login');
+      }
     } catch (submitError: unknown) {
       setError(
         submitError instanceof Error
           ? submitError.message
-          : "Could not complete authentication",
+          : 'Could not start Auth0 authentication',
       );
-    } finally {
       setLoading(false);
     }
   };
@@ -50,47 +48,37 @@ export function AuthForm({ mode }: AuthFormProps) {
   return (
     <SurfaceCard className="auth-card">
       <div className="auth-copy">
-        <span className="eyebrow">{isRegister ? "Create operator access" : "Operator login"}</span>
-        <h1>{isRegister ? "Register a studio operator" : "Sign in to manage bookings"}</h1>
+        <span className="eyebrow">{isRegister ? 'Create operator access' : 'Operator login'}</span>
+        <h1>{isRegister ? 'Register a studio operator' : 'Sign in to manage bookings'}</h1>
         <p>
-          These forms call the existing backend auth endpoints directly. Register
-          expects the backend invite code because the current API is private.
+          Authentication now uses Auth0 Universal Login. The backend verifies bearer
+          tokens and the invite code gates operator provisioning.
         </p>
       </div>
 
-      <form className="form-stack" onSubmit={handleSubmit}>
-        <label className="field">
-          <span>Email</span>
-          <input
-            className="input"
-            type="email"
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
-            required
-          />
-        </label>
-
-        <label className="field">
-          <span>Password</span>
-          <input
-            className="input"
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            required
-          />
-        </label>
-
+      <div className="form-stack">
         {isRegister ? (
-          <label className="field">
-            <span>Invite code</span>
-            <input
-              className="input"
-              value={inviteCode}
-              onChange={(event) => setInviteCode(event.target.value)}
-              required
-            />
-          </label>
+          <>
+            <label className="field">
+              <span>Invite code</span>
+              <input
+                className="input"
+                value={inviteCode}
+                onChange={(event) => setInviteCode(event.target.value)}
+                required
+              />
+            </label>
+
+            <label className="field">
+              <span>Studio name (optional)</span>
+              <input
+                className="input"
+                value={studioName}
+                onChange={(event) => setStudioName(event.target.value)}
+                placeholder="WAV CAVE Atlanta"
+              />
+            </label>
+          </>
         ) : null}
 
         {error ? (
@@ -99,21 +87,21 @@ export function AuthForm({ mode }: AuthFormProps) {
           </NoticeBanner>
         ) : null}
 
-        <Button type="submit" disabled={loading}>
+        <Button type="button" disabled={loading} onClick={handleContinue}>
           {loading
-            ? "Submitting..."
+            ? 'Redirecting...'
             : isRegister
-              ? "Create account"
-              : "Sign in"}
+              ? 'Continue with Auth0 signup'
+              : 'Continue with Auth0 login'}
         </Button>
 
         <p className="muted-copy">
-          {isRegister ? "Already have access?" : "Need an invite?"}{" "}
-          <Link href={isRegister ? "/login" : "/register"}>
-            {isRegister ? "Log in" : "Register here"}
+          {isRegister ? 'Already have access?' : 'Need an invite?'}{' '}
+          <Link href={isRegister ? '/login' : '/register'}>
+            {isRegister ? 'Log in' : 'Register here'}
           </Link>
         </p>
-      </form>
+      </div>
     </SurfaceCard>
   );
 }

@@ -13,6 +13,7 @@ import { SurfaceCard } from "@/components/ui/surface-card";
 import { loadAppHome } from "@/features/dashboard/loaders";
 import { useAsyncResource } from "@/hooks/use-async-resource";
 import { authApi } from "@/lib/api/endpoints/auth-api";
+import { logoutFromAuth0 } from "@/lib/auth/auth-client";
 
 export default function OperatorHomePage() {
   const router = useRouter();
@@ -20,6 +21,7 @@ export default function OperatorHomePage() {
 
   const handleLogout = async () => {
     await authApi.logout().catch(() => undefined);
+    await logoutFromAuth0().catch(() => undefined);
     router.push("/login");
     router.refresh();
   };
