@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { PublicLayout } from "@/components/layouts/public-layout";
 import { EmptyState } from "@/components/ui/empty-state";
 

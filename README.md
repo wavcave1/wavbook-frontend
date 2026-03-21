@@ -1,6 +1,6 @@
 # WAV CAVE Frontend
 
-Next.js + React + TypeScript frontend scaffold for the studio booking SaaS and marketplace product.
+React + TypeScript frontend scaffold for the studio booking SaaS and marketplace product.
 
 ## Setup
 
@@ -35,7 +35,6 @@ frontend/
 │  │  │  └─ endpoints/
 │  │  └─ mocks/
 │  └─ types/
-├─ .env.example
 ├─ package.json
 └─ README.md
 ```
@@ -147,6 +146,5 @@ lib/api/
 ## Notes
 
 - Public marketplace and operator pages share the same design system and tokens.
-- Dashboard pages are structured to keep API integration isolated from page markup.
-- The scaffold builds successfully with `npm run build`.
-- Lint currently reports two non-blocking warnings for raw remote `<img>` usage. Those can be replaced with `next/image` once remote image host policy is finalized.
+- Public pages that previously depended on async page components now use shared client-side resource hooks, which keeps the UI in plain React components.
+- Run `npm run build` after installing dependencies to validate the current scaffold in your environment.

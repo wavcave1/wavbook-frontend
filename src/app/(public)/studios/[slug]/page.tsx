@@ -1,4 +1,5 @@
-import { notFound } from "next/navigation";
+"use client";
+
 import { StudioProfileBookingCard } from "@/components/studio-profile/studio-profile-booking-card";
 import { StudioProfileFeaturePanel } from "@/components/studio-profile/studio-profile-feature-panel";
 import { StudioProfileGallery } from "@/components/studio-profile/studio-profile-gallery";
@@ -6,19 +7,56 @@ import { StudioProfileHero } from "@/components/studio-profile/studio-profile-he
 import { StudioProfileOverviewCard } from "@/components/studio-profile/studio-profile-overview-card";
 import { StudioProfileReviewsSummary } from "@/components/studio-profile/studio-profile-reviews-summary";
 import { SurfaceCard } from "@/components/ui/surface-card";
+import { LoadingCard } from "@/components/ui/loading-card";
+import { NoticeBanner } from "@/components/ui/notice-banner";
+import { EmptyState } from "@/components/ui/empty-state";
 import { getPublicStudioProfilePageData } from "@/features/public/studio-profile.adapter";
-import { resolveRouteInput } from "@/lib/route";
+import { useAsyncResource } from "@/hooks/use-async-resource";
 
-export default async function StudioProfilePage({
+export default function StudioProfilePage({
   params,
 }: {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: { slug: string };
 }) {
-  const { slug } = await resolveRouteInput(params);
-  const profile = await getPublicStudioProfilePageData(slug);
+  const { slug } = params;
+  const { data: profile, error, loading } = useAsyncResource(
+    () => getPublicStudioProfilePageData(slug),
+    `studio-profile:${slug}`,
+  );
+
+  if (loading) {
+    return (
+      <section className="section">
+        <div className="container">
+          <LoadingCard label="Loading studio profile" />
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="section">
+        <div className="container">
+          <NoticeBanner title="Could not load studio profile">
+            <p>{error}</p>
+          </NoticeBanner>
+        </div>
+      </section>
+    );
+  }
 
   if (!profile) {
-    notFound();
+    return (
+      <section className="section">
+        <div className="container">
+          <EmptyState
+            title="Studio not found"
+            description="The requested studio could not be found in the marketplace data source."
+          />
+        </div>
+      </section>
+    );
   }
 
   const { studio, source, categories, amenities, metadataSource, reviews } = profile;

@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 
 import { SurfaceCard } from "@/components/ui/surface-card";
 import type { PublicStudioProfile } from "@/types/api";

@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { SectionHeader } from "@/components/home/section-header";
 import { SurfaceCard } from "@/components/ui/surface-card";
 
