@@ -6,7 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "backend:dev": "npm --prefix backend run dev",
+    "backend:build": "npm --prefix backend run build",
+    "mobile:start": "npm --prefix mobile run start",
+    "mobile:ios": "npm --prefix mobile run ios",
+    "mobile:android": "npm --prefix mobile run android"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^5.6.1",
