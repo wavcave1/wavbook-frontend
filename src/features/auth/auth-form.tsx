@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import Link from "@/compat/next-link";
+import { useRouter } from "@/compat/next-navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NoticeBanner } from "@/components/ui/notice-banner";

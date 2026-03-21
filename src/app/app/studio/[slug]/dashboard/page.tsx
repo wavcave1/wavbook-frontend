@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { DashboardLoadingGrid, DashboardErrorState } from "@/components/dashboard/dashboard-state";
 import { AppLayout } from "@/components/layouts/app-layout";
 import { EmptyState } from "@/components/ui/empty-state";

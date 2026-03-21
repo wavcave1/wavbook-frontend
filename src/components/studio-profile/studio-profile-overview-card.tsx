@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { NoticeBanner } from "@/components/ui/notice-banner";
 import { SurfaceCard } from "@/components/ui/surface-card";
 import type { PublicStudioProfile } from "@/types/api";

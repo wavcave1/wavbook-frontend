@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 
 import type { PublicStudioProfile } from "@/types/api";
 import { getInitials } from "@/lib/utils";

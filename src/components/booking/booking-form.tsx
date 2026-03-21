@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Link from "@/compat/next-link";
+import { usePathname, useRouter, useSearchParams } from "@/compat/next-navigation";
 import { BookingStatusPanel } from "@/components/booking/booking-status-panel";
 import { BookingSummary } from "@/components/booking/booking-summary";
 import { ContactFields } from "@/components/booking/contact-fields";

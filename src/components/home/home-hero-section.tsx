@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { SearchBar } from "@/components/studios/search-bar";
 import { StatCard } from "@/components/ui/stat-card";
 

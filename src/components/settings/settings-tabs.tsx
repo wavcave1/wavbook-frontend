@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import Link from "@/compat/next-link";
+import { usePathname } from "@/compat/next-navigation";
 import { getStudioSettingsLinks } from "@/features/dashboard/navigation";
 import { cn } from "@/lib/utils";
 

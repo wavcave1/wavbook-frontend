@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/compat/next-link";
 import { SectionHeader } from "@/components/home/section-header";
 import { StudioGrid } from "@/components/studios/studio-grid";
 import { NoticeBanner } from "@/components/ui/notice-banner";
